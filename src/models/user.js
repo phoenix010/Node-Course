@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
+        unique: true,
         trim: true,
         lowercase: true,
         validate(value) {
@@ -40,6 +41,10 @@ const userSchema = new mongoose.Schema({
     }
 })
 
+
+
+
+//Hash the plain text password before saying
 userSchema.pre('save', async function(next){
     const user = this
     // console.log("just before saving!")
