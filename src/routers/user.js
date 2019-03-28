@@ -2,6 +2,7 @@ const express = require('express')
 const User = require('../models/user')
 const router = new express.Router()
 
+// console.log(req.body);
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
 
@@ -48,7 +49,12 @@ router.patch('/users/:id', async (req, res) => {
     }
 
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        // const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        // console.log("Request body is "+req)
+        const user = await User.findById(req.params.id)
+        updates.forEach((update)=>user[update] = req.body[update])
+
+        await user.save()
 
         if (!user) {
             return res.status(404).send()

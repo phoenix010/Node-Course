@@ -1,7 +1,6 @@
 {
   "name": "task-manager",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -11,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.5",
     "express": "^4.16.4",
     "mongodb": "^3.1.10",
     "mongoose": "^5.3.16",
@@ -18,5 +18,14 @@
   },
   "devDependencies": {
     "nodemon": "^1.18.9"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phoenix010/Node-Course.git"
+  },
+  "bugs": {
+    "url": "https://github.com/phoenix010/Node-Course/issues"
+  },
+  "homepage": "https://github.com/phoenix010/Node-Course#readme",
+  "description": ""
 }
