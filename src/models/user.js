@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const Task = require('../models/task')
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -48,7 +49,15 @@ const userSchema = new mongoose.Schema({
     }]
 })
 
-// statics define the model method
+//creating a virtual database, it is just for mongoose and not for database
+userSchema.virtual('tasks',{
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'owner'
+
+})
+
+// statics define the model method or it means for the MODEL "USER"
 userSchema.statics.findByCredentials = async(email,password)=>{
    const user = await User.findOne({email}) 
     if(!user){
@@ -61,7 +70,7 @@ userSchema.statics.findByCredentials = async(email,password)=>{
     return user;
 }
 
-// methods define the instance method
+// methods define the instance method or the method which is called on individual user
 userSchema.methods.generateAuthToken = async function (){
     const user = this
     const token = jwt.sign({_id: user._id.toString()}, 'thisismynewcourse')
@@ -70,6 +79,25 @@ userSchema.methods.generateAuthToken = async function (){
     return token
 }
 
+userSchema.methods.getPublicProfile = function(){
+    const user = this
+    const userObject = user.toObject()
+
+    delete userObject.password
+    delete userObject.tokens
+
+    return userObject
+}
+
+userSchema.methods.toJSON = function(){
+    const user = this
+    const userObject = user.toObject()
+
+    delete userObject.password
+    delete userObject.tokens
+
+    return userObject
+}
 
 //Hash the plain text password before saying
 userSchema.pre('save', async function(next){
@@ -81,6 +109,13 @@ userSchema.pre('save', async function(next){
     }
     
     
+    next()
+})
+
+//Delete user tasks when user is removed
+userSchema.pre('remove', async function(next){
+    const user = this
+    await Task.deleteMany({owner: user._id})
     next()
 })
 

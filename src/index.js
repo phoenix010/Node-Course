@@ -17,6 +17,9 @@ const port = process.env.PORT || 3000
 //     }
 // })
 
+/**
+ * If web App under Maintainence
+ */
 // app.use((req, res, next)=>{
 //     res.status(503).send('Under Maintainece')
 // })
@@ -29,3 +32,4 @@ app.use(taskRouter)
 app.listen(port, () => {
     console.log('Server is up on port ' + port)
 })
+
